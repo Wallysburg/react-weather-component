@@ -1,0 +1,8 @@
+.weather-location {
+  display: flex;
+  justify-content: space-between;
+}
+
+.city-input {
+  text-align: center;
+}
