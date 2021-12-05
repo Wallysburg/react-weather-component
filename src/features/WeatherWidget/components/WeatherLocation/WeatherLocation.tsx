@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {
+  useState,
+  useEffect
+} from 'react';
 import {
   CardContent,
-  Input,
+  TextField,
   IconButton
 } from '@material-ui/core';
 import Icon from '@mdi/react';
@@ -10,9 +13,36 @@ import {
   mdiInformationOutline
 } from '@mdi/js';
 
+import {
+  useAppSelector,
+  useAppDispatch
+} from '../../../../app/hooks';
+
 import styles from './WeatherLocation.module.css';
+import { getForecast, RequestStatus } from '../../WeatherWidget.slice';
 
 const WeatherLocation = () => {
+  const dispatch = useAppDispatch();
+  const city = useAppSelector((state) => state.weatherWidget.city);
+  const fetchForecastRequestStatus = useAppSelector((state) => state.weatherWidget.fetchForecastRequestStatus);
+  const [localCityInputState, setLocalCityInputState] = useState(city);
+
+  useEffect(function updateLocalStateOnCityStateChange() {
+    setLocalCityInputState(city);
+  }, [city])
+
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      dispatch(getForecast({
+        city: localCityInputState,
+        temperatureUnits: 'imperial'
+      }))
+    }
+  }
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setLocalCityInputState(e.target.value);
+
   return (
     <CardContent
       classes={{
@@ -22,11 +52,25 @@ const WeatherLocation = () => {
       <IconButton>
           <Icon path={mdiCrosshairsGps} size={1}/>
       </IconButton>
-      <Input
+      <TextField
         classes={{
-          input: styles['city-input']
+          root: styles['city-field']
         }}
-        disableUnderline value={'tampa'}
+        error={fetchForecastRequestStatus === RequestStatus.FAILED}
+        InputProps={{
+          classes: {
+            input: styles['city-input']
+          },
+        }}
+        FormHelperTextProps={{
+          classes: {
+            root: styles['city-input-error']
+          }
+        }}
+        helperText={fetchForecastRequestStatus === RequestStatus.FAILED ? 'Unable to find city' : ''}
+        onChange={handleOnChange}
+        onKeyPress={(handleKeyPress)}
+        value={localCityInputState}
       />
         <IconButton>
           <Icon path={mdiInformationOutline} size={1}/>

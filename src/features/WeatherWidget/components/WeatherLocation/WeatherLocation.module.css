@@ -6,3 +6,12 @@
 .city-input {
   text-align: center;
 }
+
+.city-field {
+  text-align: center;
+  justify-content: center;
+}
+
+.city-input-error {
+  text-align: center !important;
+}

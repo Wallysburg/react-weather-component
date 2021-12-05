@@ -8,6 +8,11 @@
   width: 60px;
 }
 
+.forecast-item > i {
+  font-size: 2em;
+  padding: 8px 0;
+}
+
 .forecast-precipitation {
   display: flex;
   flex-direction: row
