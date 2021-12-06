@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../../app/store';
 import moment from 'moment';
 import { fetchForecast } from './WeatherWidget.api';
 
@@ -22,9 +21,9 @@ type WeatherWidgetState = {
 
 const initialWeatherWidgetState: WeatherWidgetState = {
   city: 'Tampa',
-  temperature: 70,
+  temperature: 0,
   temperatureUnits: 'metric',
-  description: 'Clear',
+  description: 'Loading',
   forecast: [],
   date: moment().format('dddd, MMM Do YYYY'),
   time: moment().format('LT'),
@@ -54,7 +53,7 @@ type ForecastItem = {
   precipitation: number,
   temperatureUnits: string,
   iconId: string
-}
+};
 
 export const getForecast = createAsyncThunk(
   'weatherWidget/fetchForecast',
@@ -88,7 +87,11 @@ export const getForecast = createAsyncThunk(
 export const WeatherWidgetSlice = createSlice({
   name: 'weatherWidget',
   initialState: initialWeatherWidgetState,
-  reducers: {},
+  reducers: {
+    updateTime: (state) => {
+      state.time =  moment().format('LT')
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(getForecast.pending, state => {
@@ -108,5 +111,7 @@ export const WeatherWidgetSlice = createSlice({
       })
   }
 });
+
+export const { updateTime } = WeatherWidgetSlice.actions;
 
 export default WeatherWidgetSlice.reducer;

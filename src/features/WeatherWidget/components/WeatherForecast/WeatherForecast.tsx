@@ -60,6 +60,9 @@ const WeatherForecast = () => {
 
   return (
     <CardContent
+      classes={{
+        root: styles['forecast-container']
+      }}
     >
         <Tabs scrollButtons='on' variant='scrollable' value={false}>
           {forecast.map((forecastItem, index) => (

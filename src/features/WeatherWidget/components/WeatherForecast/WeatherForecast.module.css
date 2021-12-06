@@ -19,7 +19,5 @@
 }
 
 .forecast-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  min-height: 148px;
 }

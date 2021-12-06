@@ -85,7 +85,7 @@ const WeatherLocation = () => {
         onKeyPress={(handleKeyPress)}
         value={localCityInputState}
       />
-        <IconButton>
+        <IconButton disableRipple={true}>
           <Icon path={mdiInformationOutline} size={1}/>
       </IconButton>
     </CardContent>

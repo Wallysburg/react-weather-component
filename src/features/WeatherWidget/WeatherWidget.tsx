@@ -9,7 +9,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import styles from './WeatherWidget.module.css';
 import {
-  getForecast
+  getForecast, updateTime
 } from './WeatherWidget.slice';
 
 const WeatherWidget = () => {
@@ -20,6 +20,13 @@ const WeatherWidget = () => {
       location: 'Tampa',
       temperatureUnits: 'imperial'
     }))
+  }, [dispatch]);
+
+  useEffect(function updateTimeEveryMinute() {
+    const timer = setTimeout(() => {
+      dispatch(updateTime())
+    }, 1000 * 60);
+    return () => clearTimeout(timer);
   }, [dispatch]);
 
   return (
