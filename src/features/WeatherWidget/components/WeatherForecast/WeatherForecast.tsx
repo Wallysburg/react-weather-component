@@ -10,13 +10,14 @@ import Icon from '@mdi/react';
 import {
   mdiWater
 } from '@mdi/js';
-import { useAppSelector, useAppDispatch } from '../../../../app/hooks';
+import { useAppSelector } from '../../../../app/hooks';
 
 import styles from './WeatherForecast.module.css';
+import { TemperatureUnits } from '../../WeatherWidget.slice';
 
 type ForecastItemProps = {
   temperature: number,
-  temperatureUnits: string,
+  temperatureUnit: string,
   precipitation: number,
   time: string,
   day: string,
@@ -27,7 +28,7 @@ type ForecastItemProps = {
 const ForecastItem = (props: ForecastItemProps) => {
   const {
     temperature,
-    temperatureUnits,
+    temperatureUnit,
     precipitation,
     time,
     iconId,
@@ -45,7 +46,7 @@ const ForecastItem = (props: ForecastItemProps) => {
       </Typography>
         <i className={`wi wi-owm-${iconId} main-icon`} />
       <Typography align='center' variant='subtitle1' component='div'>
-       {temperature}°f
+       {temperature}°{temperatureUnit}
       </Typography>
       <div
         className={styles['forecast-precipitation']}
@@ -60,6 +61,7 @@ const ForecastItem = (props: ForecastItemProps) => {
 }
 const WeatherForecast = () => {
   const forecast = useAppSelector(state => state.weatherWidget.forecast);
+  const temperatureUnits = useAppSelector(state => state.weatherWidget.temperatureUnits);
 
   return (
     <CardContent
@@ -71,8 +73,8 @@ const WeatherForecast = () => {
           {forecast.map((forecastItem, index) => (
             <ForecastItem
               key={index}
-              temperature={forecastItem.temperature}
-              temperatureUnits={forecastItem.temperatureUnits}
+              temperature={temperatureUnits === TemperatureUnits.CELCIUS ? Math.round((forecastItem.temperature - 32) * 5/9) : forecastItem.temperature}
+              temperatureUnit={temperatureUnits === TemperatureUnits.CELCIUS ? 'c' : 'f'}
               time={forecastItem.time}
               description={forecastItem.description}
               precipitation={forecastItem.precipitation}

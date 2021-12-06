@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { fetchForecast } from './WeatherWidget.api';
 
@@ -8,30 +8,28 @@ export enum RequestStatus {
     FAILED = 'failed'
 }
 
-export enum ForecastMode {
-  DAILY,
-  WEEKLY
+export enum TemperatureUnits {
+  FARENHEIGHT,
+  CELCIUS
 }
 
 type WeatherWidgetState = {
   city: string,
   temperature: number,
-  temperatureUnits: string,
+  temperatureUnits: TemperatureUnits,
   description: string,
   forecast: Array<ForecastItem>,
   date: string,
   time: string,
   fetchForecastRequestStatus: RequestStatus,
-  forecastMode: ForecastMode
 }
 
 const initialWeatherWidgetState: WeatherWidgetState = {
   city: 'Tampa',
   temperature: 0,
-  temperatureUnits: 'metric',
+  temperatureUnits: TemperatureUnits.FARENHEIGHT,
   description: 'Loading',
   forecast: [],
-  forecastMode: ForecastMode.DAILY,
   date: moment().format('dddd, MMM Do YYYY'),
   time: moment().format('LT'),
   fetchForecastRequestStatus: RequestStatus.IDLE
@@ -87,7 +85,7 @@ export const getForecast = createAsyncThunk(
           iconId: item.weather[0].id
         };
       }),
-      description: currentForecast.weather[0].main
+      description: currentForecast.weather[0].description
     };
     return forecastData;
   }
@@ -100,11 +98,11 @@ export const WeatherWidgetSlice = createSlice({
     updateTime: (state) => {
       state.time =  moment().format('LT')
     },
-    toggleForecastView: (state) => {
-      if (state.forecastMode === ForecastMode.DAILY) {
-        state.forecastMode = ForecastMode.WEEKLY
+    toggleTemperatureUnits: (state) => {
+      if (state.temperatureUnits === TemperatureUnits.FARENHEIGHT) {
+        state.temperatureUnits = TemperatureUnits.CELCIUS
       } else {
-        state.forecastMode = ForecastMode.DAILY
+        state.temperatureUnits = TemperatureUnits.FARENHEIGHT
       }
     }
   },
@@ -130,7 +128,7 @@ export const WeatherWidgetSlice = createSlice({
 
 export const {
   updateTime,
-  toggleForecastView
+  toggleTemperatureUnits
 } = WeatherWidgetSlice.actions;
 
 export default WeatherWidgetSlice.reducer;

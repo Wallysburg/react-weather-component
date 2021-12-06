@@ -10,8 +10,8 @@ import {
 import Icon from '@mdi/react';
 import {
   mdiCrosshairsGps,
-  mdiCalendarToday,
-  mdiCalendarWeek
+  mdiTemperatureCelsius,
+  mdiTemperatureFahrenheit
 } from '@mdi/js';
 
 import {
@@ -20,12 +20,12 @@ import {
 } from '../../../../app/hooks';
 
 import styles from './WeatherLocation.module.css';
-import { ForecastMode, getForecast, RequestStatus, toggleForecastView } from '../../WeatherWidget.slice';
+import { TemperatureUnits, getForecast, RequestStatus, toggleTemperatureUnits } from '../../WeatherWidget.slice';
 
 const WeatherLocation = () => {
   const dispatch = useAppDispatch();
   const city = useAppSelector((state) => state.weatherWidget.city);
-  const forecastMode = useAppSelector((state) => state.weatherWidget.forecastMode);
+  const tempUnits = useAppSelector((state) => state.weatherWidget.temperatureUnits);
   const fetchForecastRequestStatus = useAppSelector((state) => state.weatherWidget.fetchForecastRequestStatus);
   const [localCityInputState, setLocalCityInputState] = useState(city);
 
@@ -88,9 +88,9 @@ const WeatherLocation = () => {
         value={localCityInputState}
       />
       <IconButton onClick={() => {
-        dispatch(toggleForecastView());
+        dispatch(toggleTemperatureUnits());
       }}>
-          <Icon path={forecastMode === ForecastMode.DAILY ? mdiCalendarToday : mdiCalendarWeek} size={1}/>
+          <Icon path={tempUnits === TemperatureUnits.CELCIUS ? mdiTemperatureCelsius : mdiTemperatureFahrenheit} size={1}/>
       </IconButton>
     </CardContent>
 

@@ -5,13 +5,17 @@ import {
 } from '@material-ui/core';
 
 import {
-  useAppSelector,
-  useAppDispatch
+  useAppSelector
 } from '../../../../app/hooks';
+import { TemperatureUnits } from '../../WeatherWidget.slice';
 
 const CurrentWeather = () => {
   const description = useAppSelector((state) => state.weatherWidget.description);
   const temperature = useAppSelector((state) => state.weatherWidget.temperature);
+  const temperatureUnits = useAppSelector(state => state.weatherWidget.temperatureUnits);
+
+  const tempSymbol = temperatureUnits === TemperatureUnits.CELCIUS ? 'c' : 'f';
+  const temp = temperatureUnits === TemperatureUnits.CELCIUS ? Math.round((temperature - 32) * 5/9) : temperature;
 
   return (
     <CardContent>
@@ -19,7 +23,7 @@ const CurrentWeather = () => {
           {description}
         </Typography>
         <Typography align='center' variant='h1' component='div'>
-          {temperature}°f
+          {temp}°{tempSymbol}
         </Typography>
     </CardContent>
   )

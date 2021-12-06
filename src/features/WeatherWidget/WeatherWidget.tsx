@@ -5,7 +5,7 @@ import WeatherLocation from './components/WeatherLocation';
 import Date from './components/Date';
 import WeatherForecast from './components/WeatherForecast';
 
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppDispatch } from '../../app/hooks';
 
 import styles from './WeatherWidget.module.css';
 import {

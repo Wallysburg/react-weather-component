@@ -5,8 +5,7 @@ import {
 } from '@material-ui/core';
 
 import {
-  useAppSelector,
-  useAppDispatch
+  useAppSelector
 } from '../../../../app/hooks';
 
 const Date = () => {
