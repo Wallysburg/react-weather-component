@@ -18,3 +18,23 @@
   left: 20%;
   top: 80%;
 }
+
+.location-icon-spin {
+  animation-name: ckw;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  /* Things added */
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+  display: inline-block;
+  /* <--- */
+}
+
+@keyframes ckw {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}

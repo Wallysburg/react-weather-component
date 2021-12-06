@@ -28,7 +28,7 @@ const WeatherLocation = () => {
   const tempUnits = useAppSelector((state) => state.weatherWidget.temperatureUnits);
   const fetchForecastRequestStatus = useAppSelector((state) => state.weatherWidget.fetchForecastRequestStatus);
   const [localCityInputState, setLocalCityInputState] = useState(city);
-
+  const [getLocationState, setGetLocationState] = useState(RequestStatus.IDLE);
   useEffect(function updateLocalStateOnCityStateChange() {
     setLocalCityInputState(city);
   }, [city])
@@ -52,7 +52,9 @@ const WeatherLocation = () => {
       }}
     >
       <IconButton onClick={() =>{
+                setGetLocationState(RequestStatus.LOADING)
                 navigator.geolocation.getCurrentPosition(function(position) {
+                  setGetLocationState(RequestStatus.IDLE)
                   let lat = position.coords.latitude;
                   let lon = position.coords.longitude;
 
@@ -65,7 +67,7 @@ const WeatherLocation = () => {
                   }))
                 });
         }}>
-          <Icon path={mdiCrosshairsGps} size={1} />
+          <Icon className={getLocationState === RequestStatus.LOADING ? styles['location-icon-spin'] : ''} path={mdiCrosshairsGps} size={1} />
       </IconButton>
       <TextField
         classes={{
