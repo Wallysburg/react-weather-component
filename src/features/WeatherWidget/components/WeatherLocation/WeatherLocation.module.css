@@ -13,5 +13,8 @@
 }
 
 .city-input-error {
+  position: absolute;
   text-align: center !important;
+  left: 20%;
+  top: 80%;
 }
