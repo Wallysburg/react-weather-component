@@ -10,7 +10,8 @@ import {
 import Icon from '@mdi/react';
 import {
   mdiCrosshairsGps,
-  mdiInformationOutline
+  mdiCalendarToday,
+  mdiCalendarWeek
 } from '@mdi/js';
 
 import {
@@ -19,11 +20,12 @@ import {
 } from '../../../../app/hooks';
 
 import styles from './WeatherLocation.module.css';
-import { getForecast, RequestStatus } from '../../WeatherWidget.slice';
+import { ForecastMode, getForecast, RequestStatus, toggleForecastView } from '../../WeatherWidget.slice';
 
 const WeatherLocation = () => {
   const dispatch = useAppDispatch();
   const city = useAppSelector((state) => state.weatherWidget.city);
+  const forecastMode = useAppSelector((state) => state.weatherWidget.forecastMode);
   const fetchForecastRequestStatus = useAppSelector((state) => state.weatherWidget.fetchForecastRequestStatus);
   const [localCityInputState, setLocalCityInputState] = useState(city);
 
@@ -85,8 +87,10 @@ const WeatherLocation = () => {
         onKeyPress={(handleKeyPress)}
         value={localCityInputState}
       />
-        <IconButton disableRipple={true}>
-          <Icon path={mdiInformationOutline} size={1}/>
+      <IconButton onClick={() => {
+        dispatch(toggleForecastView());
+      }}>
+          <Icon path={forecastMode === ForecastMode.DAILY ? mdiCalendarToday : mdiCalendarWeek} size={1}/>
       </IconButton>
     </CardContent>
 

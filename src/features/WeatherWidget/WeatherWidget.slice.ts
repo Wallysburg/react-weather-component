@@ -8,6 +8,11 @@ export enum RequestStatus {
     FAILED = 'failed'
 }
 
+export enum ForecastMode {
+  DAILY,
+  WEEKLY
+}
+
 type WeatherWidgetState = {
   city: string,
   temperature: number,
@@ -16,7 +21,8 @@ type WeatherWidgetState = {
   forecast: Array<ForecastItem>,
   date: string,
   time: string,
-  fetchForecastRequestStatus: RequestStatus
+  fetchForecastRequestStatus: RequestStatus,
+  forecastMode: ForecastMode
 }
 
 const initialWeatherWidgetState: WeatherWidgetState = {
@@ -25,6 +31,7 @@ const initialWeatherWidgetState: WeatherWidgetState = {
   temperatureUnits: 'metric',
   description: 'Loading',
   forecast: [],
+  forecastMode: ForecastMode.DAILY,
   date: moment().format('dddd, MMM Do YYYY'),
   time: moment().format('LT'),
   fetchForecastRequestStatus: RequestStatus.IDLE
@@ -52,7 +59,8 @@ type ForecastItem = {
   temperature: number,
   precipitation: number,
   temperatureUnits: string,
-  iconId: string
+  iconId: string,
+  day: string
 };
 
 export const getForecast = createAsyncThunk(
@@ -70,10 +78,11 @@ export const getForecast = createAsyncThunk(
       temperature: Math.round(currentForecast.main.temp),
       forecast: response.list.map((item: { dt: number; weather: { main: any, id: any; }[]; main: { temp: number; }; pop: any; }) => {
         return {
+          day: moment.unix(item.dt).format('ddd'),
           time: moment.unix(item.dt).format('ha'),
           description: item.weather[0].main,
           temperature: Math.round(item.main.temp),
-          precipitation: item.pop,
+          precipitation: Math.round(item.pop * 100),
           temperatureUnits: payload.temperatureUnits,
           iconId: item.weather[0].id
         };
@@ -90,6 +99,13 @@ export const WeatherWidgetSlice = createSlice({
   reducers: {
     updateTime: (state) => {
       state.time =  moment().format('LT')
+    },
+    toggleForecastView: (state) => {
+      if (state.forecastMode === ForecastMode.DAILY) {
+        state.forecastMode = ForecastMode.WEEKLY
+      } else {
+        state.forecastMode = ForecastMode.DAILY
+      }
     }
   },
   extraReducers: builder => {
@@ -112,6 +128,9 @@ export const WeatherWidgetSlice = createSlice({
   }
 });
 
-export const { updateTime } = WeatherWidgetSlice.actions;
+export const {
+  updateTime,
+  toggleForecastView
+} = WeatherWidgetSlice.actions;
 
 export default WeatherWidgetSlice.reducer;
