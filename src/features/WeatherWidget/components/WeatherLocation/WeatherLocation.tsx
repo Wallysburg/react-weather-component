@@ -19,6 +19,7 @@ import {
   useAppDispatch
 } from '../../../../app/hooks';
 
+import confetti from 'canvas-confetti';
 import styles from './WeatherLocation.module.css';
 import { TemperatureUnits, getForecast, RequestStatus, toggleTemperatureUnits } from '../../WeatherWidget.slice';
 
@@ -36,6 +37,11 @@ const WeatherLocation = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
+      if (localCityInputState === 'party') {
+        confetti();
+        return;
+      }
+
       dispatch(getForecast({
         location: localCityInputState,
         temperatureUnits: 'imperial'
