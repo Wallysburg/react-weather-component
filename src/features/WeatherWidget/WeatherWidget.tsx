@@ -17,7 +17,7 @@ const WeatherWidget = () => {
 
   useEffect(function getCurrentWeatherDataOnMount() {
     dispatch(getForecast({
-      city: 'Tampa',
+      location: 'Tampa',
       temperatureUnits: 'imperial'
     }))
   }, [dispatch]);

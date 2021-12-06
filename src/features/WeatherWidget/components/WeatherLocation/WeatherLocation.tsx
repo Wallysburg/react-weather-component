@@ -35,7 +35,7 @@ const WeatherLocation = () => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
       dispatch(getForecast({
-        city: localCityInputState,
+        location: localCityInputState,
         temperatureUnits: 'imperial'
       }))
     }
@@ -49,8 +49,21 @@ const WeatherLocation = () => {
         root: styles['weather-location']
       }}
     >
-      <IconButton>
-          <Icon path={mdiCrosshairsGps} size={1}/>
+      <IconButton onClick={() =>{
+                navigator.geolocation.getCurrentPosition(function(position) {
+                  let lat = position.coords.latitude;
+                  let lon = position.coords.longitude;
+
+                  dispatch(getForecast({
+                    location: {
+                      lat: lat,
+                      lon: lon
+                    },
+                    temperatureUnits: 'imperial'
+                  }))
+                });
+        }}>
+          <Icon path={mdiCrosshairsGps} size={1} />
       </IconButton>
       <TextField
         classes={{

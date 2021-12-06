@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 import moment from 'moment';
-import { fetchCurrentWeather, fetchForecast } from './WeatherWidget.api';
+import { fetchForecast } from './WeatherWidget.api';
 
 export enum RequestStatus {
     IDLE = 'idle',
@@ -31,17 +31,12 @@ const initialWeatherWidgetState: WeatherWidgetState = {
   fetchForecastRequestStatus: RequestStatus.IDLE
 };
 
-export const getCurrentWeather = createAsyncThunk(
-  'weatherWidget/fetchCurrentWeather',
-  async (payload: {
-    city: string,
-    temperatureUnits: string
-  }) => {
-    const response = await fetchCurrentWeather(payload.city, payload.temperatureUnits);
-    return response;
-  }
-);
+export type Coordinates = {
+  lon: number,
+  lat: number
+}
 
+export type GeographicLocation = Coordinates | string;
 
 type ForecastData = {
   city: string,
@@ -64,10 +59,10 @@ type ForecastItem = {
 export const getForecast = createAsyncThunk(
   'weatherWidget/fetchForecast',
   async (payload: {
-    city: string,
+    location: GeographicLocation,
     temperatureUnits: string
   }) => {
-    const response = await fetchForecast(payload.city, payload.temperatureUnits);
+    const response = await fetchForecast(payload.location, payload.temperatureUnits);
     const currentForecast = response.list[0];
     const forecastData: ForecastData = {
       city: response.city.name,
