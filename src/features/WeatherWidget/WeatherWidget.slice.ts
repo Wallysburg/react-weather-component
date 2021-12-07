@@ -22,6 +22,7 @@ type WeatherWidgetState = {
   date: string,
   time: string,
   fetchForecastRequestStatus: RequestStatus,
+  initialLoad: boolean
 }
 
 const initialWeatherWidgetState: WeatherWidgetState = {
@@ -32,7 +33,8 @@ const initialWeatherWidgetState: WeatherWidgetState = {
   forecast: [],
   date: moment().format('dddd, MMM Do YYYY'),
   time: moment().format('LT'),
-  fetchForecastRequestStatus: RequestStatus.IDLE
+  fetchForecastRequestStatus: RequestStatus.IDLE,
+  initialLoad: false
 };
 
 export type Coordinates = {
@@ -104,6 +106,9 @@ export const WeatherWidgetSlice = createSlice({
       } else {
         state.temperatureUnits = TemperatureUnits.FARENHEIGHT
       }
+    },
+    completeInitialLoad: (state) => {
+      state.initialLoad = true;
     }
   },
   extraReducers: builder => {
@@ -128,7 +133,8 @@ export const WeatherWidgetSlice = createSlice({
 
 export const {
   updateTime,
-  toggleTemperatureUnits
+  toggleTemperatureUnits,
+  completeInitialLoad
 } = WeatherWidgetSlice.actions;
 
 export default WeatherWidgetSlice.reducer;

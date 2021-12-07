@@ -4,22 +4,27 @@ import CurrentWeather from './components/CurrentWeather';
 import WeatherLocation from './components/WeatherLocation';
 import Date from './components/Date';
 import WeatherForecast from './components/WeatherForecast';
-
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 import styles from './WeatherWidget.module.css';
 import {
+  completeInitialLoad,
   getForecast, updateTime
 } from './WeatherWidget.slice';
+import { CardContent, CircularProgress } from '@material-ui/core';
 
 const WeatherWidget = () => {
   const dispatch = useAppDispatch();
+  const initialLoad = useAppSelector(state => state.weatherWidget.initialLoad);
 
   useEffect(function getCurrentWeatherDataOnMount() {
     dispatch(getForecast({
       location: 'Tampa',
       temperatureUnits: 'imperial'
     }))
+    .then(() =>{
+      dispatch(completeInitialLoad())
+    })
   }, [dispatch]);
 
   useEffect(function updateTimeEveryMinute() {
@@ -38,8 +43,16 @@ const WeatherWidget = () => {
     >
       <WeatherLocation />
       <Date />
-      <CurrentWeather />
-      <WeatherForecast />
+      {!initialLoad ?
+      <CardContent>
+        <CircularProgress size={80} thickness={1} color={'inherit'}/>
+      </CardContent> :
+      <React.Fragment>
+        <CurrentWeather />
+        <WeatherForecast />
+      </React.Fragment>
+      }
+
     </Card>
   )
 };
