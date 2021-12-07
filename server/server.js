@@ -1,11 +1,13 @@
 import express from 'express'
 import bodyParser from 'body-parser';
 import fetch from 'node-fetch';
+import dotenv from 'dotenv';
 
 const app = express()
+dotenv.config();
 const port = process.env.PORT || 3001
 const jsonParser = bodyParser.json()
-const WEATHER_API_KEY = 'b1827b6fcba1f7f6bddae0425c68b2a8';
+const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
 app.get('/api/weather', jsonParser, async (req, res) => {
   try {
