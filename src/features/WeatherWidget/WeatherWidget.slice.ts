@@ -58,7 +58,6 @@ type ForecastItem = {
   description: string,
   temperature: number,
   precipitation: number,
-  temperatureUnits: string,
   iconId: string,
   day: string
 };
@@ -69,7 +68,7 @@ export const getForecast = createAsyncThunk(
     location: GeographicLocation,
     temperatureUnits: string
   }) => {
-    const response = await fetchForecast(payload.location, payload.temperatureUnits);
+    const response = await fetchForecast(payload.location);
     const currentForecast = response.list[0];
     const forecastData: ForecastData = {
       city: response.city.name,
@@ -83,7 +82,6 @@ export const getForecast = createAsyncThunk(
           description: item.weather[0].main,
           temperature: Math.round(item.main.temp),
           precipitation: Math.round(item.pop * 100),
-          temperatureUnits: payload.temperatureUnits,
           iconId: item.weather[0].id
         };
       }),
