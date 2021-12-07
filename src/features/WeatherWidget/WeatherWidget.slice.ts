@@ -13,7 +13,7 @@ export enum TemperatureUnits {
   CELCIUS
 }
 
-type WeatherWidgetState = {
+export type WeatherWidgetState = {
   city: string,
   temperature: number,
   temperatureUnits: TemperatureUnits,
@@ -25,7 +25,7 @@ type WeatherWidgetState = {
   initialLoad: boolean
 }
 
-const initialWeatherWidgetState: WeatherWidgetState = {
+export const initialWeatherWidgetState: WeatherWidgetState = {
   city: 'Tampa',
   temperature: 0,
   temperatureUnits: TemperatureUnits.FARENHEIGHT,

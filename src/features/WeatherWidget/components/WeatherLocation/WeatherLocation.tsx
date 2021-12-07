@@ -51,28 +51,30 @@ const WeatherLocation = () => {
 
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setLocalCityInputState(e.target.value);
 
+  const handleGetLocationClick = () =>{
+    setGetLocationState(RequestStatus.LOADING)
+    navigator.geolocation.getCurrentPosition(function(position) {
+      setGetLocationState(RequestStatus.IDLE)
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+
+      dispatch(getForecast({
+        location: {
+          lat: lat,
+          lon: lon
+        },
+        temperatureUnits: 'imperial'
+      }))
+    });
+  }
+
   return (
     <CardContent
       classes={{
         root: styles['weather-location']
       }}
     >
-      <IconButton onClick={() =>{
-                setGetLocationState(RequestStatus.LOADING)
-                navigator.geolocation.getCurrentPosition(function(position) {
-                  setGetLocationState(RequestStatus.IDLE)
-                  let lat = position.coords.latitude;
-                  let lon = position.coords.longitude;
-
-                  dispatch(getForecast({
-                    location: {
-                      lat: lat,
-                      lon: lon
-                    },
-                    temperatureUnits: 'imperial'
-                  }))
-                });
-        }}>
+      <IconButton onClick={handleGetLocationClick}>
           <Icon className={getLocationState === RequestStatus.LOADING ? styles['location-icon-spin'] : ''} path={mdiCrosshairsGps} size={1} />
       </IconButton>
       <TextField
